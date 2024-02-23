@@ -54,6 +54,10 @@ You also need to install Pyxel library. You can install it via pip:
 ```bash
 pip install pyxel
 ```
+## Credits:
+
+- All games are created with ❤️ by Andressance.
+- This games were created using the Pyxel game engine. Check it out [here](https://github.com/kitao/pyxel).
 
 ## Enjoy!
 
