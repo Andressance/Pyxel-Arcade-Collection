@@ -1,12 +1,12 @@
 import pyxel
-import pelota
+import ball
 import player
 import hud
 
 class App():
     def __init__(self) -> None:
         pyxel.init(160, 120,"Pong", fps=60)
-        self.ball = pelota.Pelota()
+        self.ball = ball.Ball()
         self.player1 = player.Player(pyxel.KEY_W, pyxel.KEY_S, 0)
         self.player2 = player.Player(pyxel.KEY_UP, pyxel.KEY_DOWN, 157)
         self.score = [0, 0]
