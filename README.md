@@ -2,6 +2,10 @@
 
 ![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/4ff1e522-31e3-4ea5-b248-1e5128eb8631)
 
+[![forthebadge](https://forthebadge.com/images/featured/featured-built-with-love.svg)](https://forthebadge.com)
+![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/2e407f10-505b-4d52-9910-46cda664fc80)
+
+
 ##
 Welcome to the Pyxel Arcade Collection! This repository houses several examples of games developed using Pyxel, a Python library for retro game development. Currently, you'll find the following games:
 
