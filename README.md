@@ -2,7 +2,7 @@
 
 ![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/4ff1e522-31e3-4ea5-b248-1e5128eb8631)
 
-[![forthebadge](https://forthebadge.com/images/featured/featured-built-with-love.svg)](https://forthebadge.com)
+![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/c14d318a-b3ed-4918-bef5-55357eaf709e)
 ![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/2e407f10-505b-4d52-9910-46cda664fc80)
 
 
