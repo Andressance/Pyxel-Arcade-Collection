@@ -13,6 +13,7 @@ Welcome to the Pyxel Arcade Collection! This repository houses several examples 
 - [Snake](https://github.com/Andressance/Pyxel-Arcade-Collection/tree/main/snake)
 - [Tic Tac Toe](https://github.com/Andressance/Pyxel-Arcade-Collection/tree/main/tic%20tac%20toe)
 - ["Peculiar Pong" - A unique take on the classic Ping-Pong game](https://github.com/Andressance/Pyxel-Arcade-Collection/tree/main/peculiar_pong)
+- [Car Game]()
 
 Stay tuned as we continue to expand and enhance this collection with additional games and features. Whether you're a seasoned developer or just starting out, these examples serve as a great way to explore Pyxel's capabilities and experiment with retro game design.
 

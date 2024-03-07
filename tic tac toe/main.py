@@ -7,7 +7,8 @@ class App:
         pyxel.init(160, 120, "Tic Tac Toe")
         # Load resources and configure mouse
         pyxel.load("resources/PYXEL_RESOURCE_FILE.pyxres")
-        pyxel.mouse(False) 
+        pyxel.mouse(True)
+        pyxel.mouse(False)
         self.cursor_x = 0
         self.cursor_y = 0
         self.button_hovered = False
@@ -16,6 +17,7 @@ class App:
         self.turn = 0
         self.symbol = "X"
         # Run Pyxel app
+        self.tie = False
         pyxel.run(self.update, self.draw)
     
     def update(self):
@@ -47,6 +49,7 @@ class App:
             # Draw title and start button
             hud.title()
             hud.button(55, 60, "Start Game", 0 if self.button_hovered else 8)
+            pyxel.blt(self.cursor_x, self.cursor_y, 0, 40, 8, 8, 8, 0)
 
         else: 
             # Draw game board
