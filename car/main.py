@@ -24,19 +24,30 @@ class App:
         px.run(self.update, self.draw)
 
     def update(self) -> None:
-        self.car.update()
-        self.update_obstacles()
-        if self.score == 50:
-            for i in self.obstacles:
-                i.speed += 0.2
-
+        if not self.game_over:
+            self.car.update()
+            self.update_obstacles()
+            self.game_over = self.check_collision()
+            if self.score == 50:
+                for i in self.obstacles:
+                    i.speed += 0.2
+        else:
+            if px.btnp(px.KEY_R):
+                self.restart()
+        
 
     def draw(self) -> None:
-        px.cls(3)
-        self.draw_background()
-        self.draw_obstacles()
-        hud.show_score(self.score)
-        self.car.draw()
+        if not self.game_over:    
+            px.cls(3)
+            self.draw_background()
+            self.draw_obstacles()
+            hud.show_score(self.score)
+            self.car.draw()
+        else:
+            self.game_over_hud()
+            
+            
+                
 
     def update_score(self) -> None:
         while not self.game_over:
@@ -77,5 +88,29 @@ class App:
             bus = Bus(95, -20)
 
         self.obstacles.append(bus)
+    
 
+    def restart(self) -> None:
+        self.car = Car()
+        self.player_speed = 1
+        self.player_position = 0
+        self.score = 0
+        self.game_over = False
+        self.obstacle_threshold = 50
+        self.next_obstacle_position = self.obstacle_threshold
+        self.count = 0
+        self.obstacles = []
+        threading.Thread(target=self.update_score).start()
+
+    def game_over_hud(self) -> None:
+        px.cls(0)
+        for i in range(7):
+                px.text(40, 60, "GAME OVER", i)
+
+    def check_collision(self) -> bool:
+        for obstacle in self.obstacles:
+            if self.car.x + 10 > obstacle.x and self.car.x < obstacle.x + 10 and self.car.y + 10 > obstacle.y and self.car.y < obstacle.y + 10:
+                return True
+        return False
+    
 App()
