@@ -57,9 +57,7 @@ class Car:
         threading.Thread(target=self.draw_smoke).start()
 
     def draw_car(self) -> None:
-        x = self.x
-        y = self.y
-        px.blt(x, y, 0, 0, 16, 16, 24, 3)
+        px.blt(self.x, self.y, 0, 0, 16, 16, 24, 3)
 
     def draw_smoke(self) -> None:
         car_width = 16

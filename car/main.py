@@ -103,13 +103,15 @@ class App:
         threading.Thread(target=self.update_score).start()
 
     def game_over_hud(self) -> None:
-        px.cls(0)
-        for i in range(7):
-                px.text(40, 60, "GAME OVER", i)
+        px.cls(15)
+        px.text(35, 50, "GAME OVER", 7)
+        px.text(20, 60, "Press 'R' to restart", 7)
+        px.text(20, 70, "Your score: " + str(self.score), 7)
+                
 
     def check_collision(self) -> bool:
         for obstacle in self.obstacles:
-            if self.car.x + 10 > obstacle.x and self.car.x < obstacle.x + 10 and self.car.y + 10 > obstacle.y and self.car.y < obstacle.y + 10:
+            if self.car.x + 10 > obstacle.x and self.car.x < obstacle.x + 10 and self.car.y + 10 > obstacle.y and self.car.y < obstacle.y + 35:
                 return True
         return False
     
