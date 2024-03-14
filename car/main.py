@@ -27,16 +27,16 @@ class App:
 
     def update(self) -> None:
         if not self.game_over:
-            self.car.update()
-            self.update_obstacles()
-            self.game_over = self.check_collision()
+            self.update_obstacles()  # First, update the obstacles
+            self.car.update()  # Then, update the player
+            self.game_over = self.check_collision()  # Finally, check for collisions
             if self.score == 50:
                 for i in self.obstacles:
                     i.speed += 0.2
-            
         else:
             if px.btnp(px.KEY_R):
                 self.restart()
+
         
 
     def draw(self) -> None:
@@ -44,6 +44,7 @@ class App:
             px.cls(3)
             self.draw_background()
             self.draw_obstacles()
+            hud.display_hud()
             hud.show_score(self.score)
             self.car.draw()
         else:
@@ -60,8 +61,6 @@ class App:
     def draw_background(self) -> None:
         px.bltm(0, self.count - 112, 0, 0, 0, 128, 120)
         px.bltm(0, self.count + 8, 0, 0, 0, 128, 120)
-        px.rect(0, 2, 128, 15, 0)
-        px.rect(0, 0, 128, 15, 7)
         sleep(0.025)
         if self.count == 120:
             self.count = 0
@@ -92,8 +91,6 @@ class App:
         else:
             self.obstacles.append(Bike(15 + ran * 35, -30))
 
-        
-    
 
     def restart(self) -> None:
         self.car = Car()
