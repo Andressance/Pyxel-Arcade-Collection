@@ -2,6 +2,8 @@ import pyxel as px
 import random
 from assets.objects.car import Car
 from assets.objects.bus import Bus
+from assets.objects.obstacle_car import ObstacleCar
+from assets.objects.bike import Bike
 import assets.hud as hud
 from time import sleep
 import threading
@@ -31,6 +33,7 @@ class App:
             if self.score == 50:
                 for i in self.obstacles:
                     i.speed += 0.2
+            
         else:
             if px.btnp(px.KEY_R):
                 self.restart()
@@ -80,14 +83,16 @@ class App:
 
     def create_obstacle(self) -> None:
         ran = random.randint(0, 2)
-        if ran == 0:
-            bus = Bus(20, -20)
-        elif ran == 1:
-            bus = Bus(50, -20)
+        ranObj = random.randint(0, 2) # Elige entre obstacle car , bus y bike
+        
+        if ranObj == 0:
+            self.obstacles.append(ObstacleCar(15 + ran * 35, -30))
+        elif ranObj == 1:
+            self.obstacles.append(Bus(15 + ran * 35, -30))
         else:
-            bus = Bus(95, -20)
+            self.obstacles.append(Bike(15 + ran * 35, -30))
 
-        self.obstacles.append(bus)
+        
     
 
     def restart(self) -> None:
@@ -111,8 +116,15 @@ class App:
 
     def check_collision(self) -> bool:
         for obstacle in self.obstacles:
-            if self.car.x + 10 > obstacle.x and self.car.x < obstacle.x + 10 and self.car.y + 10 > obstacle.y and self.car.y < obstacle.y + 35:
-                return True
+            if type(obstacle) == Bus:
+                if self.car.x + 16 > obstacle.x and self.car.x < obstacle.x + 16 and self.car.y + 24 > obstacle.y and self.car.y < obstacle.y + 39:
+                    return True
+            if type(obstacle) == ObstacleCar:
+                if self.car.x + 16 > obstacle.x and self.car.x < obstacle.x + 16 and self.car.y + 24 > obstacle.y and self.car.y < obstacle.y + 32:
+                    return True
+            if type(obstacle) == Bike:
+                if self.car.x + 16 > obstacle.x and self.car.x < obstacle.x + 16 and self.car.y + 24 > obstacle.y and self.car.y < obstacle.y + 27:
+                    return True
         return False
     
 App()
