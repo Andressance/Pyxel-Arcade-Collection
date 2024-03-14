@@ -20,6 +20,8 @@ Car Game is a simple arcade-style game developed using Pyxel, a retro game engin
 
 ## Screenshots
 
+![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/1c438e52-9c4d-41fb-bfed-8153c78856ed)
+![image](https://github.com/Andressance/Pyxel-Arcade-Collection/assets/112200070/d8d53357-7331-4dbd-9828-a8c8553bcbd2)
 
 
 ## Credits
