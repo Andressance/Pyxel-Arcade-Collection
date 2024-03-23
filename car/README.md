@@ -26,5 +26,5 @@ Car Game is a simple arcade-style game developed using Pyxel, a retro game engin
 
 ## Credits
 
-- Game Development: [Your Name]
+- Game Development: Andressance
 - Pyxel: Retro game engine for Python by Takashi Kitao
