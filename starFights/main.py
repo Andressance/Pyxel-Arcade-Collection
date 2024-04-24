@@ -23,15 +23,12 @@ class Game:
             
 
     def draw(self):
-        px.cls(7)
+        px.cls(0)
         if not self.hud.in_game:
             self.hud.draw()
         else:
             if self.player is not None:
                 self.player.draw()
 
-                
-
 if __name__ == "__main__":
     Game()
-    
