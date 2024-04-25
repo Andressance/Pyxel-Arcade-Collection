@@ -34,4 +34,5 @@ class stateTree:
                 self.states[state] = True
                 self.states["idle"] = False
 
-                
+    def get_current_state(self):
+        return [state for state, value in self.states.items() if value][0]
