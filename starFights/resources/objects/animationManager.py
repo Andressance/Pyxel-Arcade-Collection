@@ -26,6 +26,8 @@ class animationManager:
             self.animate_idle()
         elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
             self.animate_walk()
+        elif self.stateTree.states["blocking"]:
+            pass
     
     def animate_idle(self):
         # Increment the frame counter
@@ -69,6 +71,7 @@ class animationManager:
 
             self.frame_count = 0
 
+
     def draw(self, characterX , characterY):
         
         state = self.stateTree.get_current_state()
@@ -88,11 +91,26 @@ class animationManager:
                 image_x, image_y = self.walk_coords[0]
                 self.frame = 0
                 self.frame_count = 0
+        elif state == "blocking":
+            try:
+                image_x, image_y = self.block_coords[0]
+            except IndexError:
+                image_x, image_y = self.block_coords[0]
+                self.frame = 0
+                self.frame_count = 0
+
         # Draw the sprite based on the state of the player
         if self.stateTree.states["idle"]:
             px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
-        if self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
+        elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
+            px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+
+        elif self.stateTree.states["blocking"]:
+            try:
+                image_x, image_y = self.block_coords[0]
+            except IndexError:
+                image_x, image_y = self.block_coords[0]
             px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
 
