@@ -103,56 +103,49 @@ class animationManager:
     def draw(self, characterX , characterY):
         
         state = self.stateTree.get_current_state()
-
-        # Get the coordinates of the sprite based on the state of the player
-        if state == "idle":
-            try:
-                image_x, image_y = self.idle_coords[self.frame]
-            except IndexError:
-                image_x, image_y = self.idle_coords[0]
-                self.frame = 0
-                self.frame_count = 0
-        elif state == "walking_right" or state == "walking_left":
-            try:
-                image_x, image_y = self.walk_coords[self.frame]
-            except IndexError:
-                image_x, image_y = self.walk_coords[0]
-                self.frame = 0
-                self.frame_count = 0
-        elif state == "blocking":
-            try:
-                image_x, image_y = self.block_coords[0]
-            except IndexError:
-                image_x, image_y = self.block_coords[0]
-                self.frame = 0
-                self.frame_count = 0
-        elif state == "attacking_forward":
-            try:
-                image_x, image_y = self.attack_coords[self.frame]
-            except IndexError:
-                image_x, image_y = self.attack_coords[0]
-                self.frame = 0
-                self.frame_count = 0
+            
 
         # Draw the sprite based on the state of the player
         if self.stateTree.states["idle"]:
-            px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+            
+            try:
+                image_x, image_y, n_image = self.idle_coords[self.frame]
+            except IndexError:
+                image_x, image_y, n_image = self.idle_coords[0]
+                self.frame = 0
+                self.frame_count = 0
+            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
         elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
-            px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+            
+            try:
+                image_x, image_y, n_image = self.walk_coords[self.frame]
+            except IndexError:
+                image_x, image_y, n_image = self.walk_coords[0]
+                self.frame = 0
+                self.frame_count = 0
+            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
         elif self.stateTree.states["blocking"]:
             try:
-                image_x, image_y = self.block_coords[0]
+                image_x, image_y, n_image = self.block_coords[0]
             except IndexError:
-                image_x, image_y = self.block_coords[0]
-            px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+                image_x, image_y, n_image = self.block_coords[0]
+                self.frame = 0
+                self.frame_count = 0
+            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
         elif self.stateTree.pressed_states["attacking_forward"]:
+            try:
+                image_x, image_y, n_image = self.attack_coords[self.frame]
+            except IndexError:
+                image_x, image_y, n_image = self.attack_coords[0]
+                self.frame = 0
+                self.frame_count = 0
             if self.frame == 0:
-                px.blt(characterX, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+                px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
             elif self.frame == 1:
-                px.blt(characterX - 8, characterY, 1, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+                px.blt(characterX - 8, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
 
 
