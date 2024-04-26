@@ -2,7 +2,8 @@ import pyxel as px
 from .stateTree import stateTree
 
 class animationManager:
-    def __init__(self, sprite_sheet:str,  idle_coords, walk_coords, mid_attack_coords, bot_attack_coords, top_attack_coords ,block_coords, sprite_size, stateTree:stateTree):
+    def __init__(self, sprite_sheet:str,  idle_coords:list, walk_coords:list, mid_attack_coords:list, 
+                 bot_attack_coords:list, top_attack_coords:list ,block_coords:list, sprite_size:list, stateTree:stateTree):
         self.sprite_sheet = sprite_sheet
         self.SPRITE_SIZE = sprite_size
         self.idle_coords = idle_coords
