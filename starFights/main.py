@@ -13,6 +13,7 @@ class Game:
         
 
     def update(self):
+    
         if not self.hud.in_game:
             self.hud.update()
         else:
@@ -21,7 +22,7 @@ class Game:
             
             self.player.update()
             
-
+ 
     def draw(self):
         px.cls(0)
         if not self.hud.in_game:

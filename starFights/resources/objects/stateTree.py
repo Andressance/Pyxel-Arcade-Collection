@@ -14,7 +14,6 @@ class stateTree:
         }
 
         self.pressed_states = {
-            "jumping": False, 
             "attacking_up": False, 
             "attacking_down": False, 
             "attacking_forward": False,
@@ -33,11 +32,13 @@ class stateTree:
 
     def update(self):
 
-        
+        # Get the current state of the player
         self.before_state = self.get_current_state()
 
+        # If the player is not on an animation
         if not self.on_animation:
-            
+
+            self.frame_count = 0
             self.states = {state: False if state != "idle" else True for state in self.states}
             self.pressed_states = {state: False for state in self.pressed_states}
 
@@ -54,11 +55,29 @@ class stateTree:
                     self.on_animation = True
                     
                     
+        # If the player is on an animation       
         else:
+
             self.frame_count += 1
-            if self.frame_count > 35:
+            
+            if self.pressed_states["attacking_forward"] and self.frame_count > 30:
                 self.on_animation = False
                 self.frame_count = 0
+                self.pressed_states["attacking_forward"] = False
+                self.states["idle"] = True
+
+            elif self.pressed_states["attacking_down"] and self.frame_count > 30:
+                self.on_animation = False
+                self.frame_count = 0
+                self.pressed_states["attacking_down"] = False
+                self.states["idle"] = True
+
+            elif self.pressed_states["attacking_up"] and self.frame_count > 30:
+                self.on_animation = False
+                self.frame_count = 0
+                self.pressed_states["attacking_up"] = False
+                self.states["idle"] = True
+                
                 
                 
 

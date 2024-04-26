@@ -23,26 +23,27 @@ class Player:
             "walking_left": px.KEY_A,
             "crouching": px.KEY_S,
             "blocking": px.KEY_Q,
-            "blocking_down": px.KEY_Q + px.KEY_DOWN,
-            "blocking_forward": px.KEY_Q + px.KEY_UP,
+            "blocking_down": px.KEY_S,
+            "blocking_forward": px.KEY_P,
             },
 
             { # Pressed Keys
-                "jumping": px.KEY_W,
-                "attaking_up": px.KEY_E + px.KEY_UP,
-                "attacking_down": px.KEY_E + px.KEY_DOWN,
-                "attacking_forward": px.KEY_E,
+                "attacking_up": px.KEY_UP,
+                "attacking_down": px.KEY_DOWN,
+                "attacking_forward": px.KEY_RIGHT,
             }
         )
 
         self.animationManager = animationManager(
-            self.sprite_sheet,
-            [(0,0,1),(0,72,1),(0,144,1)],
-            [(72,0,1),(72,72,1),(72,144,1),(144, 0,1)],
-            [(144,128,1),(152,192,1)],
-            [(144,64,1)],
-            64,
-            self.stateTree                        
+            sprite_sheet=self.sprite_sheet,
+            idle_coords=[(0,0,1),(0,72,1),(0,144,1)],
+            walk_coords=[(72,0,1),(72,72,1),(72,144,1),(144, 0,1)],
+            mid_attack_coords=[(144,128,1),(72,0,2), (0,128,2)],
+            bot_attack_coords=[(144,128,1),(0,0,2),(8,64,2)],
+            top_attack_coords=[(144,128,1),(0,192,2),(0,128,2)],
+            block_coords=[(144,64,1)],
+            sprite_size=64,
+            stateTree=self.stateTree                     
         )
 
     def update(self):
