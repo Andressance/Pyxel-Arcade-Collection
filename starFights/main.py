@@ -8,6 +8,7 @@ class Game:
         px.init(self.x_size, self.y_size, "Star Fights", 60)
         px.load("resources/sprites/sprites.pyxres")
         self.player = None
+        self.enemy = None
         self.hud = Hud(self.x_size, self.y_size)
         px.run(self.update, self.draw)
         

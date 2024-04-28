@@ -22,3 +22,6 @@ class ForceManager:
 
         if self.force < 0:
             self.force = 0
+
+        if self.force > self.MAX_FORCE:
+            self.force = self.MAX_FORCE

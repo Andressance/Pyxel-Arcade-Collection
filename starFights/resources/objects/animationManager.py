@@ -4,6 +4,7 @@ from .stateTree import stateTree
 class animationManager:
     def __init__(self, sprite_sheet:str,  idle_coords:list, walk_coords:list, mid_attack_coords:list, 
                  bot_attack_coords:list, top_attack_coords:list, force_pushing_coords:list, block_coords:list, sprite_size:list, stateTree:stateTree):
+        
         self.sprite_sheet = sprite_sheet
         self.SPRITE_SIZE = sprite_size
         self.idle_coords = idle_coords
@@ -80,13 +81,13 @@ class animationManager:
         if self.frame_count > int(self.SEC_LIMIT * 0.15):
             # At 0.15 seconds, change frame of the animation
             if self.stateTree.states["walking_right"]:
-                # Si el jugador está caminando hacia la derecha, aumenta el frame
+                # If the player is walking to the right, increase the frame
                 if self.frame >= 3:
                     self.frame = 0
                 else:
                     self.frame += 1
             elif self.stateTree.states["walking_left"]:
-                # Si el jugador está caminando hacia la izquierda, disminuye el frame
+                # If the player is walking to the left, decrease the frame
                 if self.frame <= 0:
                     self.frame = 3
                 else:
@@ -103,7 +104,7 @@ class animationManager:
             self.frame_count = 0
 
         if self.frame_count > int(self.SEC_LIMIT * 0.12):
-            # At 0.15 seconds, change frame of the animation
+            # At 0.12 seconds, change frame of the animation
             self.frame += 1
             if self.frame >= 3:
                 self.frame = 0
@@ -136,7 +137,7 @@ class animationManager:
                 self.frame_count = 0
     
             if self.frame_count > int(self.SEC_LIMIT * 0.12):
-                # At 0.15 seconds, change frame of the animation
+                # At 0.12 seconds, change frame of the animation
                 self.frame += 1
                 if self.frame > 2:
                     self.frame = 0
@@ -152,7 +153,7 @@ class animationManager:
                 self.frame_count = 0
     
             if self.frame_count > int(self.SEC_LIMIT * time):
-                # At 0.12 seconds, change frame of the animation
+                # Change frame of the animation
                 self.frame += 1
                 if self.frame > 1:
                     self.frame = 0
