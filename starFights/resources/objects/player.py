@@ -2,20 +2,41 @@ import pyxel as px
 from .stateTree import stateTree
 from .animationManager import animationManager
 from time import sleep
+from .playerHUD import PlayerHUD
+from random import randint
+from . import staminaManager, forceManager
 
 class Player:
     def __init__(self,x,y,health):
+        # Player coordinates
         self.x = x
         self.y = y
+
+        self.frame_count = 0
+        
+        # Player stats
         self.health = health
+        self.MAX_HEALTH = 100
+        self.force = 20
+        self.MAX_FORCE = 100
+        self.stamina = 100
+        self.MAX_STAMINA = 100
+        
+        
+        # Draw variables
         self.sprite_x = 0
         self.sprite_y = 0
         self.sprite_size = 65
         
+        # We create the hitbox
+        self.hitbox = ((self.x,self.x + self.sprite_size),(self.y, self.y + self.sprite_size))
 
+        # We create the HUD of player stats
+        self.HUD = PlayerHUD(self.health, self.force, self.stamina, self.MAX_HEALTH, self.MAX_FORCE, self.MAX_STAMINA)
         
 
         self.sprite_sheet = "resources/sprites/sprites.pyxres"
+        
         px.load(self.sprite_sheet)
 
         self.stateTree = stateTree({ # Holded Keys
@@ -33,6 +54,13 @@ class Player:
                 "attacking_forward": px.KEY_RIGHT,
             }
         )
+        # The stateTree is a dictionary that holds the keys that are being pressed and the keys that are pressed
+        # The keys that are being pressed are the keys that are being held
+        # The keys that are pressed are the keys that are pressed once
+
+        # We create the stamina manager
+        self.staminaManager = staminaManager.StaminaManager(self.stamina, self.MAX_STAMINA, self.stateTree)
+        self.forceManager = forceManager.ForceManager(self.force, self.MAX_FORCE)
 
         self.animationManager = animationManager(
             sprite_sheet=self.sprite_sheet,
@@ -50,10 +78,20 @@ class Player:
         self.stateTree.update()
         self.animationManager.update()
         self.move()
+        self.check_out_of_bounds(0, px.width - self.sprite_size)
+        self.HUD.update(self.health, self.force, self.stamina)
+        self.stamina = self.staminaManager.update(self.stamina, self.stateTree)
+        self.force = self.forceManager.update(self.force)
+        # Tests
+        if px.btnp(px.KEY_SPACE):
+            self.health -= 10
+        if px.btnp(px.KEY_E):
+            self.force -= 20
 
 
     def draw(self):
         self.animationManager.draw(self.x, self.y)
+        self.HUD.draw()
         
     def move(self):
         if self.stateTree.states["walking_right"]:
@@ -61,4 +99,16 @@ class Player:
         if self.stateTree.states["walking_left"]:
             self.x -= 1
         
-   
+    def check_out_of_bounds(self, x_offset:int, y_offset:int):
+        if self.x < x_offset:
+            self.x = x_offset
+        if self.x > y_offset:
+            self.x = y_offset
+
+    
+            
+        
+    
+            
+
+        

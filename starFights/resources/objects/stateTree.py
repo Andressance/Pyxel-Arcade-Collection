@@ -92,4 +92,6 @@ class stateTree:
             if value:
                 return state
     
+    def is_attacking(self):
+        return self.pressed_states["attacking_up"] or self.pressed_states["attacking_down"] or self.pressed_states["attacking_forward"]
     

@@ -18,7 +18,7 @@ class Game:
             self.hud.update()
         else:
             if self.player is None: # We create the player only if its not created # We create the player only if its not created
-                self.player = Player(50, 50, 100)
+                self.player = Player(50, 200, 100)
             
             self.player.update()
             
