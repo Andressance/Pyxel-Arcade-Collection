@@ -22,7 +22,7 @@ class Game:
             
             self.player.update()
             
- 
+
     def draw(self):
         px.cls(0)
         if not self.hud.in_game:

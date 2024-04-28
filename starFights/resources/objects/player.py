@@ -52,7 +52,9 @@ class Player:
                 "attacking_up": px.KEY_UP,
                 "attacking_down": px.KEY_DOWN,
                 "attacking_forward": px.KEY_RIGHT,
-            }
+            },
+            self.stamina,
+            self.force
         )
         # The stateTree is a dictionary that holds the keys that are being pressed and the keys that are pressed
         # The keys that are being pressed are the keys that are being held
@@ -75,7 +77,7 @@ class Player:
         )
 
     def update(self):
-        self.stateTree.update()
+        self.stateTree.update(self.stamina, self.force)
         self.animationManager.update()
         self.move()
         self.check_out_of_bounds(0, px.width - self.sprite_size)

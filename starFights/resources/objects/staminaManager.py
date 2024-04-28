@@ -21,8 +21,9 @@ class StaminaManager:
 
         if self.stateTree.is_attacking():
             if self.frame_count > 30:
-                self.stamina -= 15
-                self.frame_count = 0
+                if self.stamina >= 15:
+                    self.stamina -= 15
+                    self.frame_count = 0
 
         # If the player does not attack in 60 frames, regenerate stamina
         if self.frame_count > randint(40, 60):

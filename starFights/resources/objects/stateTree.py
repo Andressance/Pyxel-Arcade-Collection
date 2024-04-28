@@ -1,7 +1,11 @@
 import pyxel as px
 from time import sleep
 class stateTree:
-    def __init__(self, movement_keys: dict, pressed_keys):
+    def __init__(self, movement_keys: dict, pressed_keys, stamina: int, force: int):
+        
+        self.stamina = stamina
+        self.force = force
+
         # Creamos un diccionario con todos los posibles estados del jugador y los inicializamos como False
         self.states = {
             "idle": True, 
@@ -30,7 +34,10 @@ class stateTree:
         self.before_state = None
         
 
-    def update(self):
+    def update(self, stamina:int, force:int):
+
+        self.stamina = stamina
+        self.force = force
 
         # Get the current state of the player
         self.before_state = self.get_current_state()
@@ -50,14 +57,16 @@ class stateTree:
 
             for state, key in self.pressed_keys.items():
                 if px.btnp(key):
-                    self.pressed_states[state] = True
-                    self.states["idle"] = False
-                    self.on_animation = True
+                    if self.stamina >= 15:
+                        self.pressed_states[state] = True
+                        self.states["idle"] = False
+                        self.on_animation = True
                     
                     
         # If the player is on an animation       
         else:
-
+            
+            self.states = {state: False for state in self.states}
             self.frame_count += 1
             
             if self.pressed_states["attacking_forward"] and self.frame_count > 30:
