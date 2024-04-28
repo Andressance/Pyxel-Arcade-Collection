@@ -21,6 +21,7 @@ class stateTree:
             "attacking_up": False, 
             "attacking_down": False, 
             "attacking_forward": False,
+            "force_pushing": False
             # "dodging_up": False, 
             # "dodging_down": False, 
             # "dodging_forward": False, 
@@ -41,7 +42,7 @@ class stateTree:
 
         # Get the current state of the player
         self.before_state = self.get_current_state()
-
+        
         # If the player is not on an animation
         if not self.on_animation:
 
@@ -57,10 +58,16 @@ class stateTree:
 
             for state, key in self.pressed_keys.items():
                 if px.btnp(key):
-                    if self.stamina >= 15:
+                    if self.force >= 20 and state == "force_pushing":
                         self.pressed_states[state] = True
                         self.states["idle"] = False
                         self.on_animation = True
+                    elif self.stamina >= 20 and state != "force_pushing":
+                        self.pressed_states[state] = True
+                        self.states["idle"] = False
+                        self.on_animation = True
+                    else:
+                        pass
                     
                     
         # If the player is on an animation       
@@ -73,19 +80,25 @@ class stateTree:
                 self.on_animation = False
                 self.frame_count = 0
                 self.pressed_states["attacking_forward"] = False
-                self.states["idle"] = True
+                
 
             elif self.pressed_states["attacking_down"] and self.frame_count > 30:
                 self.on_animation = False
                 self.frame_count = 0
                 self.pressed_states["attacking_down"] = False
-                self.states["idle"] = True
+                
 
             elif self.pressed_states["attacking_up"] and self.frame_count > 30:
                 self.on_animation = False
                 self.frame_count = 0
                 self.pressed_states["attacking_up"] = False
-                self.states["idle"] = True
+            
+
+            elif self.pressed_states["force_pushing"] and self.frame_count > 25:
+                self.on_animation = False
+                self.frame_count = 0
+                self.pressed_states["force_pushing"] = False
+                
                 
                 
                 

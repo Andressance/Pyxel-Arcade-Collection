@@ -3,7 +3,7 @@ from .stateTree import stateTree
 
 class animationManager:
     def __init__(self, sprite_sheet:str,  idle_coords:list, walk_coords:list, mid_attack_coords:list, 
-                 bot_attack_coords:list, top_attack_coords:list ,block_coords:list, sprite_size:list, stateTree:stateTree):
+                 bot_attack_coords:list, top_attack_coords:list, force_pushing_coords:list, block_coords:list, sprite_size:list, stateTree:stateTree):
         self.sprite_sheet = sprite_sheet
         self.SPRITE_SIZE = sprite_size
         self.idle_coords = idle_coords
@@ -11,6 +11,7 @@ class animationManager:
         self.mid_attack_coords = mid_attack_coords
         self.bot_attack_coords = bot_attack_coords
         self.top_attack_coords = top_attack_coords
+        self.force_pushing_coords = force_pushing_coords
         self.block_coords = block_coords
         self.stateTree = stateTree # Character state tree
 
@@ -40,7 +41,8 @@ class animationManager:
             self.animate_bot_attack()
         elif self.stateTree.pressed_states["attacking_up"]:
             self.animate_top_attack()
-        
+        elif self.stateTree.pressed_states["force_pushing"]:
+            self.animate_force_pushing()
     
     def animate_idle(self):
         # Increment the frame counter
@@ -140,6 +142,22 @@ class animationManager:
                     self.frame = 0
                 
                 self.frame_count = 0
+
+    def animate_force_pushing(self):
+            
+            self.frame_count += 1
+            time = 0.1 if self.frame == 0 else 0.25
+            if self.stateTree.before_state != "force_pushing":
+                self.frame = 0
+                self.frame_count = 0
+    
+            if self.frame_count > int(self.SEC_LIMIT * time):
+                # At 0.12 seconds, change frame of the animation
+                self.frame += 1
+                if self.frame > 1:
+                    self.frame = 0
+                
+                self.frame_count = 0
         
 
 
@@ -180,6 +198,12 @@ class animationManager:
         elif self.stateTree.pressed_states["attacking_up"]:
             
             image_x, image_y, n_image = self.top_attack_coords[self.frame]
+            
+            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+
+        elif self.stateTree.pressed_states["force_pushing"]:
+
+            image_x, image_y, n_image = self.force_pushing_coords[self.frame]
             
             px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
     

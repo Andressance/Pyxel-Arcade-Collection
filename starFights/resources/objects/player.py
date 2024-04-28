@@ -52,12 +52,13 @@ class Player:
                 "attacking_up": px.KEY_UP,
                 "attacking_down": px.KEY_DOWN,
                 "attacking_forward": px.KEY_RIGHT,
+                "force_pushing": px.KEY_E
             },
             self.stamina,
             self.force
         )
         # The stateTree is a dictionary that holds the keys that are being pressed and the keys that are pressed
-        # The keys that are being pressed are the keys that are being held
+        # The keys that are being pressed are the keys that are  being held
         # The keys that are pressed are the keys that are pressed once
 
         # We create the stamina manager
@@ -71,6 +72,7 @@ class Player:
             mid_attack_coords=[(144,128,1),(72,0,2), (0,128,2)],
             bot_attack_coords=[(144,128,1),(0,0,2),(8,64,2)],
             top_attack_coords=[(144,128,1),(0,192,2),(0,128,2)],
+            force_pushing_coords=[(72,64,2),(72,128,2)],
             block_coords=[(144,64,1)],
             sprite_size=64,
             stateTree=self.stateTree                     
@@ -85,8 +87,7 @@ class Player:
         self.stamina = self.staminaManager.update(self.stamina, self.stateTree)
         self.force = self.forceManager.update(self.force)
         # Tests
-        if px.btnp(px.KEY_SPACE):
-            self.health -= 10
+        
         if px.btnp(px.KEY_E):
             self.force -= 20
 
