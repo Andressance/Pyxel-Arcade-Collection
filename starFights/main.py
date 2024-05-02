@@ -24,7 +24,10 @@ class Game:
                 self.enemy = Enemy(350, 200, 100)
             self.player.update()
             self.enemy.update(self.player.x, self.player.y, self.player.stateTree.before_state)
-            
+            if self.player.health <= 0:
+                self.hud.in_game = False
+                self.player = None
+                self.enemy = None
 
     def draw(self):
         px.cls(0)
