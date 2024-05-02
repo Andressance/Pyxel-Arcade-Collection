@@ -19,7 +19,9 @@ class Enemy:
         px.load(self.sprite_sheet)
         
         self.aiManager = AIManager(self.x, self.y, self.health)
-        self.aimationManager= AiAnimationManager()
+        self.aimationManager= AiAnimationManager(
+            
+        )
 
         self.frame_count = 0
         

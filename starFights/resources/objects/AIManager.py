@@ -107,8 +107,21 @@ class EnemyAI:
     # Other methods for other behaviors and actions of the enemy
 
 class AiAnimationManager:
-    def __init__(self):
-        pass
+    def __init__(self, sprite_sheet:str,  idle_coords:list, walk_coords:list, mid_attack_coords:list, 
+                bot_attack_coords:list, top_attack_coords:list, force_pushing_coords:list, block_coords:list, stateTree:EnemyAI):
+        
+        self.sprite_sheet = sprite_sheet
+        self.idle_coords = idle_coords
+        self.walk_coords = walk_coords
+        self.mid_attack_coords = mid_attack_coords
+        self.bot_attack_coords = bot_attack_coords
+        self.top_attack_coords = top_attack_coords
+        self.force_pushing_coords = force_pushing_coords
+        self.block_coords = block_coords
+        self.stateTree = stateTree
+        self.frame = 0
+
+        self.frame_count = 0
 
     def invert_partial_sprite(self, x, y, width, height):
         # Load the sprite image
@@ -124,3 +137,9 @@ class AiAnimationManager:
                 mirrored_sprite_image.pset(width - dx - 1, dy, pixel_color)
 
         return mirrored_sprite_image
+    
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
