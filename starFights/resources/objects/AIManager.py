@@ -20,9 +20,12 @@ class EnemyAI:
         }
         self.frame_count = 0
 
+        self.before_state = "idle"
+        self.distance = 0
+
     def update(self, player_x, player_y, player_state):
         # Update the enemy state based on player position or other conditions
-        self.update_state(player_x, player_y)
+        self.update_state(player_x, player_y, player_state)
 
         # Update the enemy based on its state
         if self.states["idle"]:
@@ -40,9 +43,15 @@ class EnemyAI:
         elif self.states["blocking_top"] or self.states["blocking_bot"] or self.states["blocking_mid"]:
             self.blocking_behavior()
 
+        return self.enemy_x, self.enemy_y
+
     def update_state(self, player_x, player_y, player_state):
         # Logic to update enemy state based on player position or other conditions
-        distance_x = abs(self.enemy_x - player_x)
+
+        self.before_state = self.get_current_state()
+
+        self.distance = self.enemy_x - player_x
+        distance_x = abs(self.distance)
         distance_y = abs(self.enemy_y - player_y)
 
         if distance_x <= 50 and distance_y <= 50:
@@ -80,9 +89,10 @@ class EnemyAI:
 
     def chasing_behavior(self, player_x):
         if (self.enemy_x < player_x):
-            self.enemy_x += 1
+            self.enemy_x += 0.75
         else:
-            self.enemy_x -= 1
+            self.enemy_x -= 0.75
+
 
     def attacking_top_behavior(self, player_x, player_y):
         # Behavior when enemy is attacking the player from top
@@ -106,6 +116,12 @@ class EnemyAI:
 
     # Other methods for other behaviors and actions of the enemy
 
+    def get_current_state(self):
+        # Return the current state of the enemy
+        for state, value in self.states.items():
+            if value:
+                return state
+
 class AiAnimationManager:
     def __init__(self, sprite_sheet:str,  idle_coords:list, walk_coords:list, mid_attack_coords:list, 
                 bot_attack_coords:list, top_attack_coords:list, force_pushing_coords:list, block_coords:list, stateTree:EnemyAI):
@@ -121,25 +137,72 @@ class AiAnimationManager:
         self.stateTree = stateTree
         self.frame = 0
 
+        
+        self.COL_IGNORE = 11
         self.frame_count = 0
 
-    def invert_partial_sprite(self, x, y, width, height):
-        # Load the sprite image
-        sprite_image = px.images[0]
 
-        # Create a new image to store the mirrored sprite
-        mirrored_sprite_image = px.image(width, height)
+    def update(self, enemy_x, enemy_y):
+        self.enemy_x = enemy_x
+        self.enemy_y = enemy_y
+        
 
-        # Invert the specified part of the sprite horizontally
-        for dy in range(height):
-            for dx in range(width):
-                pixel_color = sprite_image.pget(x + dx, y + dy)
-                mirrored_sprite_image.pset(width - dx - 1, dy, pixel_color)
+        self.frame_count += 1
 
-        return mirrored_sprite_image
-    
-    def update(self):
-        pass
+        if self.stateTree.states["idle"]:
+            self.idle_animation()
+        elif self.stateTree.states["chasing"]:
+            self.walk_animation()
+        elif self.stateTree.states["attacking_top"]:
+            self.top_attack_animation()
+        elif self.stateTree.states["attacking_bot"]:
+            self.bot_attack_animation()
+        elif self.stateTree.states["attacking_mid"]:
+            self.mid_attack_animation()
+        elif self.stateTree.states["force_pushing"]:
+            self.force_pushing_animation()
+        elif self.stateTree.states["blocking_top"] or self.stateTree.states["blocking_bot"] or self.stateTree.states["blocking_mid"]:
+            self.block_animation()
 
-    def draw(self):
-        pass
+    def idle_animation(self):
+        self.frame_count += 1
+        
+        if self.stateTree.before_state != "idle":
+            self.frame = 0
+            self.frame_count = 0
+
+        if self.frame_count > 10:
+            self.frame += 1
+            if self.frame > 0:
+                self.frame = 0
+            self.frame_count = 0
+
+    def walk_animation(self):
+        self.frame_count += 1
+
+        if self.stateTree.before_state != "chasing":
+            self.frame = 0
+            self.frame_count = 0
+
+        if self.frame_count > 15:
+            self.frame += 1
+            if self.frame > 5:
+                self.frame = 0
+            self.frame_count = 0
+            
+
+    def draw(self, characterX, characterY, distance):
+        if self.stateTree.states["idle"]:
+            image_x, image_y, n_image, width, height = self.idle_coords[self.frame]
+            px.blt(characterX, characterY, n_image, image_x, image_y, width, height, self.COL_IGNORE)
+
+        elif self.stateTree.states["chasing"]:
+            image_x, image_y, n_image, width, height = self.walk_coords[self.frame]
+            
+            if distance < 0:
+                px.blt(characterX, characterY, n_image, image_x, image_y, width, height, self.COL_IGNORE)
+            else:
+                px.blt(characterX, characterY, n_image, image_x, image_y, -width, height, self.COL_IGNORE)
+
+
+            
