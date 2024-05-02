@@ -89,8 +89,9 @@ class Player:
         # Tests
         
         if px.btnp(px.KEY_E):
-            self.force -= 20
-
+            if self.force > 20:
+                self.force -= 20
+            
 
     def draw(self):
         self.animationManager.draw(self.x, self.y)
