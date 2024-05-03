@@ -20,6 +20,8 @@ class animationManager:
         self.frame_count = 0  # Frame counter
         self.reverse_animation = False  # Animation direction
         
+        self.distanceX = 0
+        self.distanceY = 0
 
         self.COL_IGNORE = 8 # Color to ignore when drawing sprite
         self.SEC_LIMIT = 60 # Game limited to 60 frames per second
@@ -28,8 +30,11 @@ class animationManager:
         px.load(self.sprite_sheet)
 
 
-    def update(self):
+    def update(self, distanceX, distanceY):
         
+        self.distanceX = distanceX
+        self.distanceY = distanceY
+
         if self.stateTree.states["idle"]:
             self.animate_idle()
         elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
@@ -163,49 +168,42 @@ class animationManager:
 
 
     def draw(self, characterX , characterY):
-            
+        
+        image_x, image_y, n_image = None, None, None
 
         # Draw the sprite based on the state of the player
         if self.stateTree.states["idle"]:
             
             image_x, image_y, n_image = self.idle_coords[self.frame]
 
-            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
-
         elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
             
             image_x, image_y, n_image = self.walk_coords[self.frame]
-            
-            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
 
         elif self.stateTree.states["blocking"]:
             
             image_x, image_y, n_image = self.block_coords[0]
             
-            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
-
         elif self.stateTree.pressed_states["attacking_forward"]:
             
             image_x, image_y, n_image = self.mid_attack_coords[self.frame]
             
-            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
-
         elif self.stateTree.pressed_states["attacking_down"]:
             
             image_x, image_y, n_image = self.bot_attack_coords[self.frame]
             
-            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
-
         elif self.stateTree.pressed_states["attacking_up"]:
             
             image_x, image_y, n_image = self.top_attack_coords[self.frame]
             
-            px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
-
         elif self.stateTree.pressed_states["force_pushing"]:
 
             image_x, image_y, n_image = self.force_pushing_coords[self.frame]
             
+        if image_x is None or image_y is None or n_image is None:
+            return
+        
+        if self.distanceX < 0:
             px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
-    
-
+        else:
+            px.blt(characterX + self.SPRITE_SIZE, characterY, n_image, image_x, image_y, -self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)

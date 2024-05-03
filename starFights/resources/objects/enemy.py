@@ -21,7 +21,7 @@ class Enemy:
         self.aiManager = EnemyAI(self.x, self.y, self.health)
         self.aimationManager= AiAnimationManager(
             sprite_sheet=self.sprite_sheet,
-            idle_coords=[(0, 0, 0, 0, 0)],
+            idle_coords=[(56, 64, 0, 87, 63), (144, 64, 0, 87, 63)],
             walk_coords=[(24, 0, 0, 39, 64), (64, 0, 0, 39, 64), (104, 0, 0, 39, 64), (152, 0, 0, 39, 64), (192,0,0,39,64), (0,64,0,56, 64)],
             mid_attack_coords=[(0, 0, 0, 0, 0)],
             bot_attack_coords=[(0, 0, 0, 0, 0)],

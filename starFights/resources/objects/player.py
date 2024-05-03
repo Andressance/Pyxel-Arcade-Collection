@@ -27,6 +27,9 @@ class Player:
         self.sprite_x = 0
         self.sprite_y = 0
         self.sprite_size = 65
+
+        self.distanceX = 0
+        self.distanceY = 0
         
         # We create the hitbox
         self.hitbox = ((self.x,self.x + self.sprite_size),(self.y, self.y + self.sprite_size))
@@ -78,9 +81,13 @@ class Player:
             stateTree=self.stateTree                     
         )
 
-    def update(self):
+    def update(self, enemy_x, enemy_y):
+
+        self.distanceX = self.x - enemy_x
+        self.distanceY = self.y - enemy_y
+
         self.stateTree.update(self.stamina, self.force)
-        self.animationManager.update()
+        self.animationManager.update(self.distanceX, self.distanceY)
         self.move()
         self.check_out_of_bounds(0, px.width - self.sprite_size)
         self.HUD.update(self.health, self.force, self.stamina)

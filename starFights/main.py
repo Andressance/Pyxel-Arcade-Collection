@@ -22,7 +22,7 @@ class Game:
                 self.player = Player(50, 200, 100)
             if self.enemy == None:
                 self.enemy = Enemy(350, 200, 100)
-            self.player.update()
+            self.player.update(self.enemy.x, self.enemy.y)
             self.enemy.update(self.player.x, self.player.y, self.player.stateTree.before_state)
             if self.player.health <= 0:
                 self.hud.in_game = False
