@@ -16,26 +16,29 @@ class Enemy:
         
         self.sprite_sheet = "resources/sprites/enemy.pyxres"
         
-        px.load(self.sprite_sheet)
         
         self.aiManager = EnemyAI(self.x, self.y, self.health)
-        self.aimationManager= AiAnimationManager(
+        self.animationManager = AiAnimationManager(
             sprite_sheet=self.sprite_sheet,
-            idle_coords=[(56, 64, 0, 87, 63), (144, 64, 0, 87, 63)],
-            walk_coords=[(24, 0, 0, 39, 64), (64, 0, 0, 39, 64), (104, 0, 0, 39, 64), (152, 0, 0, 39, 64), (192,0,0,39,64), (0,64,0,56, 64)],
-            mid_attack_coords=[(0, 0, 0, 0, 0)],
-            bot_attack_coords=[(0, 0, 0, 0, 0)],
-            top_attack_coords=[(0, 0, 0, 0, 0)],
-            force_pushing_coords=[(0, 0, 0, 0, 0)],
-            block_coords=[(0, 0, 0, 0, 0)],
-            stateTree=self.aiManager
+            coords={
+                "idle": {"frames": [(144, 128, 0, 35, 64)], "time": 0.15, "max_frame": 0},
+                "chasing": {"frames": [(24, 0, 0, 39, 64), (64, 0, 0, 39, 64), (104, 0, 0, 39, 64), (152, 0, 0, 39, 64), (192, 0, 0, 39, 64), (0, 64, 0, 56, 64)], "time": 0.15, "max_frame": 5},
+                "attacking_up": {"frames": [(0, 144, 0, 64, 64), (56, 64, 0, 87, 63), (80, 128, 0, 63, 64)], "time": 0.15, "max_frame": 2},
+                "attacking_down": {"frames": [(80, 128, 0, 63, 64), (56, 64, 0, 87, 63), (0, 144, 0, 64, 64)], "time": 0.15, "max_frame": 2},
+                "attacking_forward": {"frames": [(0, 0, 0, 0, 0)], "time": 0.15, "max_frame": 0},
+                "blocking_up": {"frames": [(0, 128, 0, 78, 79)], "time": 0.2, "max_frame": 0},
+                "blocking_down": {"frames": [(80, 128, 0, 63, 64)], "time": 0.2, "max_frame": 0},
+                "blocking_forward": {"frames": [(0, 128, 0, 78, 79)], "time": 0.2, "max_frame": 0}
+            },
+            sprite_size=64,
+            state_tree=self.aiManager
         )
         self.frame_count = 0
 
     def update(self, player_x, player_y, player_state):
         self.x, self.y = self.aiManager.update(player_x, player_y, player_state)
-        self.aimationManager.update(self.x, self.y)
+        self.animationManager.update(self.x, self.y)
 
     def draw(self):
-        self.aimationManager.draw(self.x, self.y, self.aiManager.distance)
+        self.animationManager.draw()
         

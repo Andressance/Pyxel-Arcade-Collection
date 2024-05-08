@@ -1,209 +1,74 @@
 import pyxel as px
-from .stateTree import stateTree
+from .stateTree import StateTree
 
-class animationManager:
-    def __init__(self, sprite_sheet:str,  idle_coords:list, walk_coords:list, mid_attack_coords:list, 
-                 bot_attack_coords:list, top_attack_coords:list, force_pushing_coords:list, block_coords:list, sprite_size:list, stateTree:stateTree):
-        
+class AnimationManager:
+    def __init__(self, sprite_sheet:str, coords: dict, sprite_size:list, state_tree:StateTree):
         self.sprite_sheet = sprite_sheet
         self.SPRITE_SIZE = sprite_size
-        self.idle_coords = idle_coords
-        self.walk_coords = walk_coords
-        self.mid_attack_coords = mid_attack_coords
-        self.bot_attack_coords = bot_attack_coords
-        self.top_attack_coords = top_attack_coords
-        self.force_pushing_coords = force_pushing_coords
-        self.block_coords = block_coords
-        self.stateTree = stateTree # Character state tree
-
-        self.frame = 0  # Animation frame
-        self.frame_count = 0  # Frame counter
-        self.reverse_animation = False  # Animation direction
+        self.coords = coords
+        self.state_tree = state_tree
+        
+        self.frame = 0
+        self.frame_count = 0
+        self.reverse_animation = False
         
         self.distanceX = 0
         self.distanceY = 0
 
-        self.COL_IGNORE = 8 # Color to ignore when drawing sprite
-        self.SEC_LIMIT = 60 # Game limited to 60 frames per second
-
-        
+        self.COL_IGNORE = 8
+        self.SEC_LIMIT = 60
         px.load(self.sprite_sheet)
-
 
     def update(self, distanceX, distanceY):
         
         self.distanceX = distanceX
         self.distanceY = distanceY
 
-        if self.stateTree.states["idle"]:
-            self.animate_idle()
-        elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
-            self.animate_walk()
-        elif self.stateTree.states["blocking"]:
-            pass
-        elif self.stateTree.pressed_states["attacking_forward"]:
-            self.animate_mid_attack()
-        elif self.stateTree.pressed_states["attacking_down"]:
-            self.animate_bot_attack()
-        elif self.stateTree.pressed_states["attacking_up"]:
-            self.animate_top_attack()
-        elif self.stateTree.pressed_states["force_pushing"]:
-            self.animate_force_pushing()
-    
-    def animate_idle(self):
-        # Increment the frame counter
+        for action, pressed in self.state_tree.pressed_states.items():
+            if pressed:
+                self.animate(action)
+
+        for action, active in self.state_tree.states.items():
+            if active:
+                self.animate(action)
+
+    def animate(self, action):
+        
         self.frame_count += 1
 
-        if self.stateTree.before_state != "idle":   
+        if self.state_tree.before_state != action:
             self.frame = 0
             self.frame_count = 0
 
-        if self.frame_count > int(self.SEC_LIMIT * 0.5):  # At 0.75 seconds, change frame of the animation
-            
-            if self.frame == 2:  # Check if the frame is 3
-                self.reverse_animation = True  # Set the animation to reverse
-            elif self.frame == 0:  # If the frame is 0
-                self.reverse_animation = False  # Set the animation to forward
-            # Move the frame based on the animation direction
-            
-            if not self.reverse_animation:
-                self.frame += 1
-            
-            else:
-                self.frame -= 1
-            
-            self.frame_count = 0
+        action_coords = self.coords.get(action)
+        if not action_coords:
+            return
 
-            
-
-    def animate_walk(self):
-        self.frame_count += 1
-        
-        if self.stateTree.before_state != "walking_right" and self.stateTree.before_state != "walking_left":
-            self.frame = 0
-            self.frame_count = 0
-
-        if self.frame_count > int(self.SEC_LIMIT * 0.15):
-            # At 0.15 seconds, change frame of the animation
-            if self.stateTree.states["walking_right"]:
-                # If the player is walking to the right, increase the frame
-                if self.frame >= 3:
-                    self.frame = 0
-                else:
-                    self.frame += 1
-            elif self.stateTree.states["walking_left"]:
-                # If the player is walking to the left, decrease the frame
-                if self.frame <= 0:
-                    self.frame = 3
-                else:
-                    self.frame -= 1
-
-            self.frame_count = 0
-
-    def animate_mid_attack(self):
-        
-        self.frame_count += 1
-        
-        if self.stateTree.before_state != "attacking_forward":
-            self.frame = 0
-            self.frame_count = 0
-
-        if self.frame_count > int(self.SEC_LIMIT * 0.12):
-            # At 0.12 seconds, change frame of the animation
+        time = action_coords.get('time', 0.12)
+        if self.frame_count > int(self.SEC_LIMIT * time):
             self.frame += 1
-            if self.frame >= 3:
+            max_frame = action_coords.get('max_frame', 2)
+            if self.frame > max_frame:
                 self.frame = 0
-            
             self.frame_count = 0
 
-    def animate_bot_attack(self):
-        
-        self.frame_count += 1
-        
-        if self.stateTree.before_state != "attacking_down":
-            self.frame = 0
-            self.frame_count = 0
-
-        if self.frame_count > int(self.SEC_LIMIT * 0.12):
-            # At 0.15 seconds, change frame of the animation
-            self.frame += 1
-            if self.frame > 2:
-                self.frame = 0
-            
-            self.frame_count = 0
-
-    def animate_top_attack(self):
-            
-            self.frame_count += 1
-            
-            
-            if self.stateTree.before_state != "attacking_up":
-                self.frame = 0
-                self.frame_count = 0
-    
-            if self.frame_count > int(self.SEC_LIMIT * 0.12):
-                # At 0.12 seconds, change frame of the animation
-                self.frame += 1
-                if self.frame > 2:
-                    self.frame = 0
-                
-                self.frame_count = 0
-
-    def animate_force_pushing(self):
-            
-            self.frame_count += 1
-            time = 0.1 if self.frame == 0 else 0.25
-            if self.stateTree.before_state != "force_pushing":
-                self.frame = 0
-                self.frame_count = 0
-    
-            if self.frame_count > int(self.SEC_LIMIT * time):
-                # Change frame of the animation
-                self.frame += 1
-                if self.frame > 1:
-                    self.frame = 0
-                
-                self.frame_count = 0
-        
-
-
-    def draw(self, characterX , characterY):
-        
-        image_x, image_y, n_image = None, None, None
-
-        # Draw the sprite based on the state of the player
-        if self.stateTree.states["idle"]:
-            
-            image_x, image_y, n_image = self.idle_coords[self.frame]
-
-        elif self.stateTree.states["walking_right"] or self.stateTree.states["walking_left"]:
-            
-            image_x, image_y, n_image = self.walk_coords[self.frame]
-
-        elif self.stateTree.states["blocking"]:
-            
-            image_x, image_y, n_image = self.block_coords[0]
-            
-        elif self.stateTree.pressed_states["attacking_forward"]:
-            
-            image_x, image_y, n_image = self.mid_attack_coords[self.frame]
-            
-        elif self.stateTree.pressed_states["attacking_down"]:
-            
-            image_x, image_y, n_image = self.bot_attack_coords[self.frame]
-            
-        elif self.stateTree.pressed_states["attacking_up"]:
-            
-            image_x, image_y, n_image = self.top_attack_coords[self.frame]
-            
-        elif self.stateTree.pressed_states["force_pushing"]:
-
-            image_x, image_y, n_image = self.force_pushing_coords[self.frame]
-            
-        if image_x is None or image_y is None or n_image is None:
+    def draw(self, characterX, characterY):
+        action = self.state_tree.get_current_state()
+        action_coords = self.coords.get(action)
+        if not action_coords:
             return
         
+        try:
+            image_x, image_y, n_image = action_coords.get('frames', [None, None, None])[self.frame]
+        except IndexError:
+            self.frame = 0
+            image_x, image_y, n_image = action_coords.get('frames', [None, None, None])[self.frame]
+
+        if image_x is None or image_y is None or n_image is None:
+            return
+
         if self.distanceX < 0:
             px.blt(characterX, characterY, n_image, image_x, image_y, self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
         else:
             px.blt(characterX + self.SPRITE_SIZE, characterY, n_image, image_x, image_y, -self.SPRITE_SIZE, self.SPRITE_SIZE, self.COL_IGNORE)
+

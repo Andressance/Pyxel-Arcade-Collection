@@ -1,6 +1,6 @@
 import pyxel as px
-from .stateTree import stateTree
-from .animationManager import animationManager
+from .stateTree import StateTree
+from .animationManager import AnimationManager
 from time import sleep
 from .playerHUD import PlayerHUD
 from random import randint
@@ -42,7 +42,7 @@ class Player:
         
         px.load(self.sprite_sheet)
 
-        self.stateTree = stateTree({ # Holded Keys
+        self.stateTree = StateTree({ # Holded Keys
             "walking_right": px.KEY_D,
             "walking_left": px.KEY_A,
             "crouching": px.KEY_S,
@@ -68,21 +68,26 @@ class Player:
         self.staminaManager = staminaManager.StaminaManager(self.stamina, self.MAX_STAMINA, self.stateTree)
         self.forceManager = forceManager.ForceManager(self.force, self.MAX_FORCE)
 
-        self.animationManager = animationManager(
+        self.animationManager = AnimationManager(
             sprite_sheet=self.sprite_sheet,
-            idle_coords=[(0,0,1),(0,72,1),(0,144,1)],
-            walk_coords=[(72,0,1),(72,72,1),(72,144,1),(144, 0,1)],
-            mid_attack_coords=[(144,128,1),(72,0,2), (0,128,2)],
-            bot_attack_coords=[(144,128,1),(0,0,2),(8,64,2)],
-            top_attack_coords=[(144,128,1),(0,192,2),(0,128,2)],
-            force_pushing_coords=[(72,64,2),(72,128,2)],
-            block_coords=[(144,64,1)],
+            coords={
+                "idle": {"frames": [(0, 0, 1), (0, 72, 1), (0, 144, 1)], "time": 0.12, "max_frame": 2},
+                "walking_right": {"frames": [(72, 0, 1), (72, 72, 1), (72, 144, 1), (144, 0, 1)], "time": 0.12, "max_frame": 3},
+                "walking_left": {"frames": [(144, 0, 1), (72, 144, 1),(72, 72, 1),(72, 0, 1)], "time": 0.12, "max_frame": 3},
+                "attacking_up": {"frames": [(144, 128, 1), (72, 0, 2), (0, 128, 2)], "time": 0.12, "max_frame": 2},
+                "attacking_down": {"frames": [(144, 128, 1), (0, 0, 2), (8, 64, 2)], "time": 0.12, "max_frame": 2},
+                "attacking_forward": {"frames": [(144, 128, 1), (0, 192, 2), (0, 128, 2)], "time": 0.12, "max_frame": 2},
+                "force_pushing": {"frames": [(72, 64, 2), (72, 128, 2)], "time": 0.25, "max_frame": 1},
+                "blocking": {"frames": [(144, 64, 1)]},
+            },
             sprite_size=64,
-            stateTree=self.stateTree                     
+            state_tree=self.stateTree
         )
 
-    def update(self, enemy_x, enemy_y):
 
+
+    def update(self, enemy_x, enemy_y):
+        
         self.distanceX = self.x - enemy_x
         self.distanceY = self.y - enemy_y
 

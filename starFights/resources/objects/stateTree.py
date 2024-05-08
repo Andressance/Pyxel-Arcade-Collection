@@ -1,6 +1,6 @@
 import pyxel as px
 
-class stateTree:
+class StateTree:
     def __init__(self, movement_keys: dict, pressed_keys, stamina: int, force: int):
         self.stamina = stamina
         self.force = force
@@ -70,5 +70,8 @@ class stateTree:
             if value:
                 return state
 
+        return "idle"  # Devolver estado predeterminado si no se encuentra ningún estado activo
+
+
     def is_attacking(self):
-        return any(self.pressed_states[state] for state in ["attacking_up", "attacking_down", "attacking_forward"])
+        return any([self.pressed_states[state] for state in self.pressed_states])
